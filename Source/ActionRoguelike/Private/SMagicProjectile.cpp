@@ -24,14 +24,16 @@ ASMagicProjectile::ASMagicProjectile()
 	MovementComponent->InitialSpeed = 1000.0f;
 	MovementComponent->bRotationFollowsVelocity = true;
 	MovementComponent->bInitialVelocityInLocalSpace = true;
-	
+
+	LineSpan = 5.0f;
 }
 
 // Called when the game starts or when spawned
 void ASMagicProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	SetLifeSpan(LineSpan);
 }
 
 // Called every frame

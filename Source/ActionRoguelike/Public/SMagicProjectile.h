@@ -16,6 +16,9 @@ public:
 	ASMagicProjectile();
 
 protected:
+	UPROPERTY(EditAnywhere, Category = "Stats")
+	float LineSpan;
+	
 	UPROPERTY(VisibleAnywhere)
 	class USphereComponent* SphereComponent;
 

@@ -8,6 +8,8 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class USInteractionComponent;
+class UAnimMontage;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASCharacter : public ACharacter
@@ -29,6 +31,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	TSubclassOf<AActor> ProjectileClass;
 
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USInteractionComponent* InteractionComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Attacks")
+	UAnimMontage* AttackAnim;
+
+	FTimerHandle TimerHandle_PrimaryAttack;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -40,6 +50,12 @@ protected:
 
 	UFUNCTION()
 	void PrimaryAttack();
+
+	UFUNCTION()
+	void PrimaryAttack_TimeElapsed();
+
+	UFUNCTION()
+	void PrimaryInteract();
 
 public:	
 	// Called every frame
