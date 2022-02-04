@@ -26,11 +26,20 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	USpringArmComponent* SpringArmComp;
 
+	UPROPERTY(EditAnywhere, Category = "Attacks")
+	TSubclassOf<AActor> ProjectileClass;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
 	void MoveForward(float Value);
+
+	UFUNCTION()
+	void MoveRight(float Value);
+
+	UFUNCTION()
+	void PrimaryAttack();
 
 public:	
 	// Called every frame
