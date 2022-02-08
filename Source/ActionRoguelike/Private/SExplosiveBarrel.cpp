@@ -27,9 +27,9 @@ ASExplosiveBarrel::ASExplosiveBarrel()
 }
 
 // Called when the game starts or when spawned
-void ASExplosiveBarrel::BeginPlay()
+void ASExplosiveBarrel::PostInitializeComponents()
 {
-	Super::BeginPlay();
+	Super::PostInitializeComponents();
 
 	MeshComponent->OnComponentHit.AddDynamic(this, &ASExplosiveBarrel::OnActorHit);
 }
