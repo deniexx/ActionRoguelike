@@ -25,7 +25,7 @@ ASMagicProjectile::ASMagicProjectile()
 	MovementComponent->bRotationFollowsVelocity = true;
 	MovementComponent->bInitialVelocityInLocalSpace = true;
 
-	LineSpan = 5.0f;
+	LifeSpan = 5.0f;
 }
 
 // Called when the game starts or when spawned
@@ -33,7 +33,7 @@ void ASMagicProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetLifeSpan(LineSpan);
+	SetLifeSpan(LifeSpan);
 }
 
 // Called every frame

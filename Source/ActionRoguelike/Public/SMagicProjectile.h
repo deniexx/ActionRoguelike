@@ -17,7 +17,7 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Stats")
-	float LineSpan;
+	float LifeSpan;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class USphereComponent* SphereComponent;
