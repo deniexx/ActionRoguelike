@@ -31,6 +31,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	TSubclassOf<AActor> ProjectileClass;
 
+	UPROPERTY(EditAnywhere, Category = "Attacks")
+	TSubclassOf<AActor> SecondaryProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category = "Utility")
+	TSubclassOf<AActor> PrimaryUtilityClass;
+
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USInteractionComponent* InteractionComponent;
 
@@ -38,6 +44,8 @@ protected:
 	UAnimMontage* AttackAnim;
 
 	FTimerHandle TimerHandle_PrimaryAttack;
+	FTimerHandle TimerHandle_SecondaryAttack;
+	FTimerHandle TimerHandle_PrimaryUtility;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -53,6 +61,18 @@ protected:
 
 	UFUNCTION()
 	void PrimaryAttack_TimeElapsed();
+
+	UFUNCTION()
+	void SecondaryAttack();
+
+	UFUNCTION()
+	void SecondaryAttack_TimeElapsed();
+
+	UFUNCTION()
+	void PrimaryUtility();
+
+	UFUNCTION()
+	void PrimaryUtility_TimeElapsed();
 
 	UFUNCTION()
 	void PrimaryInteract();

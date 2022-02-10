@@ -2,6 +2,8 @@
 
 
 #include "SCharacter.h"
+
+#include "DrawDebugHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/SInteractionComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -56,6 +58,10 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttack);
+	PlayerInputComponent->BindAction("SecondaryAttack", IE_Pressed, this, &ASCharacter::SecondaryAttack);
+	
+	PlayerInputComponent->BindAction("PrimaryUtility", IE_Pressed, this, &ASCharacter::PrimaryUtility);
+	
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &ASCharacter::PrimaryInteract);
 }
 
@@ -90,14 +96,81 @@ void ASCharacter::PrimaryAttack()
 
 void ASCharacter::PrimaryAttack_TimeElapsed()
 {
-	const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-	const FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+	// Shooting a raycast to determine the rotation of the projectile
+	const FVector Start = CameraComp->GetComponentLocation();
+	FVector EyeLocation;
+	FRotator EyeRotation;
+	GetActorEyesViewPoint(EyeLocation, EyeRotation);
+	FVector End = Start + (EyeRotation.Vector() * 100000);
+	
+	FHitResult Hit;
+	FCollisionQueryParams CollisionQueryParams;
+	CollisionQueryParams.AddIgnoredActor(this);
+	GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Camera, CollisionQueryParams);
 
+	const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	FRotator SpawnTMRotator;
+	
+	AActor* HitActor = Hit.GetActor();
+	if (HitActor)
+		SpawnTMRotator = (Hit.ImpactPoint - HandLocation).Rotation();
+	else
+		SpawnTMRotator = (End - HandLocation).Rotation();
+
+	// Spawning the projectile
+	const FTransform SpawnTM = FTransform(SpawnTMRotator, HandLocation);
+	
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Instigator = this;
 	
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+}
+
+void ASCharacter::SecondaryAttack()
+{
+	PlayAnimMontage(AttackAnim);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_SecondaryAttack, this, &ASCharacter::SecondaryAttack_TimeElapsed, 0.2f);
+}
+
+void ASCharacter::SecondaryAttack_TimeElapsed()
+{
+	FVector EyeLocation;
+	FRotator EyeRotation;
+	GetActorEyesViewPoint(EyeLocation, EyeRotation);
+
+	const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	const FTransform SpawnTM = FTransform(EyeRotation, HandLocation);
+	
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Instigator = this;
+	
+	GetWorld()->SpawnActor<AActor>(SecondaryProjectileClass, SpawnTM, SpawnParams);
+}
+
+void ASCharacter::PrimaryUtility()
+{
+	PlayAnimMontage(AttackAnim);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryUtility, this, &ASCharacter::PrimaryUtility_TimeElapsed, 0.2f);
+}
+
+void ASCharacter::PrimaryUtility_TimeElapsed()
+{
+	FVector EyeLocation;
+	FRotator EyeRotation;
+	GetActorEyesViewPoint(EyeLocation, EyeRotation);
+
+	const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	const FTransform SpawnTM = FTransform(EyeRotation, HandLocation);
+	
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Instigator = this;
+	
+	GetWorld()->SpawnActor<AActor>(PrimaryUtilityClass, SpawnTM, SpawnParams);
 }
 
 // Interaction using the interaction component
