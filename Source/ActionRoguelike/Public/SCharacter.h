@@ -9,6 +9,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 class USInteractionComponent;
+class USAttributeComponent;
 class UAnimMontage;
 
 UCLASS()
@@ -40,9 +41,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USInteractionComponent* InteractionComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USAttributeComponent* AttributeComponent;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Attacks")
 	UAnimMontage* AttackAnim;
-
+	
 	FTimerHandle TimerHandle_PrimaryAttack;
 	FTimerHandle TimerHandle_SecondaryAttack;
 	FTimerHandle TimerHandle_PrimaryUtility;

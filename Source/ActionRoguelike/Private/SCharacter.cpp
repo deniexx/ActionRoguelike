@@ -4,6 +4,7 @@
 #include "SCharacter.h"
 
 #include "DrawDebugHelpers.h"
+#include "SAttributeComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/SInteractionComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -23,6 +24,8 @@ ASCharacter::ASCharacter()
 	CameraComp->SetupAttachment(SpringArmComp);
 
 	InteractionComponent = CreateDefaultSubobject<USInteractionComponent>(TEXT("InteractionComponent"));
+
+	AttributeComponent = CreateDefaultSubobject<USAttributeComponent>(TEXT("AttributeComponent"));
 
 	bUseControllerRotationYaw = false;
 	

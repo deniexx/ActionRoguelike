@@ -3,6 +3,7 @@
 
 #include "SExplosiveBarrel.h"
 
+#include "SAttributeComponent.h"
 #include "Engine/CollisionProfile.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 
@@ -39,7 +40,14 @@ void ASExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComponent, AActor* Ot
 {
 	RadialForceComponent->FireImpulse();
 
-	UE_LOG(LogTemp, Log, TEXT("OnActorHit in Explosive Barrel"));
+	if (OtherActor)
+	{
+		USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
+		if (AttributeComponent)
+		{
+			AttributeComponent->ApplyHealthChange(-50.0f);
+		}
+	}
 }
 
 
