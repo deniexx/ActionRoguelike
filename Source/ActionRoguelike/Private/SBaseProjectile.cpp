@@ -3,6 +3,7 @@
 
 #include "SBaseProjectile.h"
 
+#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -27,6 +28,9 @@ ASBaseProjectile::ASBaseProjectile()
 	MovementComponent->bRotationFollowsVelocity = true;
 	MovementComponent->bInitialVelocityInLocalSpace = true;
 
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));\
+	AudioComponent->SetupAttachment(RootComponent);
+
 	LifeSpan = 5.0f;
 }
 
@@ -36,4 +40,7 @@ void ASBaseProjectile::PostInitializeComponents()
 	
 	SetLifeSpan(LifeSpan);
 	SphereComponent->IgnoreActorWhenMoving(GetInstigator(), true);
+
+	if (AudioComponent)
+		AudioComponent->Play();
 }

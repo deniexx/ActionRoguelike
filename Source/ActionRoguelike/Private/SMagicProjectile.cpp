@@ -15,32 +15,37 @@ ASMagicProjectile::ASMagicProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ASMagicProjectile::OnActorOverlap);
+
+	Damage = 20.0f;
 }
 
 void ASMagicProjectile::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp,
 	bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
 	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
-	
-	if (Other != GetInstigator())
-	{
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyParticle, Hit.ImpactPoint);
-		Destroy();
-	}
+
+	ApplyDamageAndDestroyActor(Other, Hit);
 }
 
 void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	ApplyDamageAndDestroyActor(OtherActor, SweepResult);
+}
+
+void ASMagicProjectile::ApplyDamageAndDestroyActor(AActor* OtherActor, const FHitResult& Hit)
 {
 	if (OtherActor && OtherActor != GetInstigator())
 	{
 		USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
 		if (AttributeComponent)
 		{
-			AttributeComponent->ApplyHealthChange(-20.0f);
+			AttributeComponent->ApplyHealthChange(-Damage);
 		}
 
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyParticle, SweepResult.ImpactPoint);
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyParticle, Hit.ImpactPoint);
+		UGameplayStatics::PlayWorldCameraShake(GetWorld(), CameraShakeBase, Hit.ImpactPoint, 00.0f, 800.0f, 0.0f);
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplosionSound, Hit.ImpactPoint);
 		Destroy();
 	}
 }

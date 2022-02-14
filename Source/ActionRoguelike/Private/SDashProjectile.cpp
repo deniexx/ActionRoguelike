@@ -24,7 +24,7 @@ void ASDashProjectile::ProjectileFlight_TimerElapsed()
 	if (ExplodeParticles)
 		ExplodeParticles->ActivateSystem(true);
 
-	MovementComponent->Deactivate();
+	MovementComponent->StopMovementImmediately();
 	
 	GetWorldTimerManager().SetTimer(TimerHandle_WaitForExplode, this, &ASDashProjectile::WaitForExplode_TimerElapsed, 0.2f);
 }

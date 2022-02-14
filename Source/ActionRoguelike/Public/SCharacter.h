@@ -46,6 +46,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Attacks")
 	UAnimMontage* AttackAnim;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+	UParticleSystem* MuzzleFlash;
 	
 	FTimerHandle TimerHandle_PrimaryAttack;
 	FTimerHandle TimerHandle_SecondaryAttack;
@@ -80,6 +83,11 @@ protected:
 
 	UFUNCTION()
 	void PrimaryInteract();
+
+	UFUNCTION()
+	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComponent, float NewHealth, float Delta);
+
+	virtual void PostInitializeComponents() override;
 
 public:	
 	// Called every frame

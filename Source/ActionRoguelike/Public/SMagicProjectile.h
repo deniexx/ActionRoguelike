@@ -22,9 +22,18 @@ public:
 
 	UFUNCTION()
 	void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	void ApplyDamageAndDestroyActor(AActor* OtherActor, const FHitResult& Hit);
 	
 protected:
 	UPROPERTY(EditAnywhere, Category = "Particles")
 	UParticleSystem* DestroyParticle;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Stats")
+	float Damage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "VFX")
+	TSubclassOf<UCameraShakeBase> CameraShakeBase;
+	
 
 };

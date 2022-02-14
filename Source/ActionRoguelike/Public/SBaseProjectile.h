@@ -27,6 +27,14 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UParticleSystemComponent* EffectComponent;
 
+	UPROPERTY(EditAnywhere, Category = "Sounds")
+	class USoundBase* ExplosionSound;
+
+	UPROPERTY(VisibleAnywhere, Category = "Sounds")
+	class UAudioComponent* AudioComponent;
+
+	
+
 public:
 	virtual void PostInitializeComponents() override;
 

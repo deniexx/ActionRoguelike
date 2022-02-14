@@ -9,16 +9,28 @@ USAttributeComponent::USAttributeComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	Health = 100.0f;
+	
+	MaxHealth = 100.0f;
+	Health = MaxHealth;
 }
 
 bool USAttributeComponent::ApplyHealthChange(float Delta)
 {
 	Health += Delta;
+	Health = FMath::Clamp(Health, 0.0f, MaxHealth);
 
 	OnHealthChanged.Broadcast(nullptr, this, Health, Delta);
 
 	return true;
+}
+
+bool USAttributeComponent::IsAlive() const
+{
+	return Health > 0.0f;
+}
+
+bool USAttributeComponent::IsAtMaxHealth()
+{
+	return Health == MaxHealth;
 }
 
