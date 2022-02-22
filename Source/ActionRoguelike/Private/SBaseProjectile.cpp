@@ -24,7 +24,7 @@ ASBaseProjectile::ASBaseProjectile()
 	EffectComponent->SetupAttachment(RootComponent);
 
 	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MovementComponent"));
-	MovementComponent->InitialSpeed = 1000.0f;
+	MovementComponent->InitialSpeed = 2000.0f;
 	MovementComponent->bRotationFollowsVelocity = true;
 	MovementComponent->bInitialVelocityInLocalSpace = true;
 
