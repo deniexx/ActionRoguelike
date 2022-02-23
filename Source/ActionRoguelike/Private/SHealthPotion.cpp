@@ -27,7 +27,7 @@ void ASHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 		USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(InstigatorPawn->GetComponentByClass(USAttributeComponent::StaticClass()));
 		if (AttributeComponent && !AttributeComponent->IsAtMaxHealth())
 		{
-			AttributeComponent->ApplyHealthChange(HealAmount);
+			AttributeComponent->ApplyHealthChange(this, HealAmount);
 			DisableAllActions();
 			FTimerHandle EnableActorActions;
 			GetWorldTimerManager().SetTimer(EnableActorActions, this, &ASHealthPotion::EnableActorActions_TimerElapsed, TimerDuration);

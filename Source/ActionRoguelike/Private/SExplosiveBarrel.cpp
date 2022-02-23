@@ -39,15 +39,6 @@ void ASExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComponent, AActor* Ot
 	UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& SweepResult)
 {
 	RadialForceComponent->FireImpulse();
-
-	if (OtherActor)
-	{
-		USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
-		if (AttributeComponent)
-		{
-			AttributeComponent->ApplyHealthChange(-50.0f);
-		}
-	}
 }
 
 
