@@ -19,6 +19,7 @@ ASMagicProjectile::ASMagicProjectile()
 	Damage = 20.0f;
 }
 
+/*
 void ASMagicProjectile::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp,
 	bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
@@ -26,6 +27,7 @@ void ASMagicProjectile::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UP
 
 	ApplyDamageAndDestroyActor(Other, Hit);
 }
+*/
 
 void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
