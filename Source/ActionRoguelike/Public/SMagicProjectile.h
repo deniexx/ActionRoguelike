@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "SBaseProjectile.h"
-#include "GameFramework/Actor.h"
 #include "SMagicProjectile.generated.h"
 
 UCLASS()
@@ -20,8 +19,8 @@ public:
 
 	//virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
-	UFUNCTION()
-	void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	//UFUNCTION()
+	//void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 	void ApplyDamageAndDestroyActor(AActor* OtherActor, const FHitResult& Hit);
 	

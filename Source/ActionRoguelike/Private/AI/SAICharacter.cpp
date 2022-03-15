@@ -40,7 +40,6 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 {
 	if (Delta < 0.0f)
 	{
-
 		if (InstigatorActor != this)
 		{
 			SetTargetActor(InstigatorActor);
@@ -56,16 +55,15 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 				ActiveHealthBar->AddToViewport();
 			}
 		}
+
+		AAIController* AIC = Cast<AAIController>(GetController());
+		if (!AIC) return;
 		
 		GetMesh()->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->TimeSeconds);
 		
 		if(NewHealth <= 0.0f)
 		{
-			AAIController* AIC = Cast<AAIController>(GetController());
-			if (AIC)
-			{
-				AIC->GetBrainComponent()->StopLogic("Killed");
-			}
+			AIC->GetBrainComponent()->StopLogic("Killed");
 
 			GetCapsuleComponent()->SetCollisionProfileName("NoCollision");
 			GetMesh()->SetAllBodiesSimulatePhysics(true);

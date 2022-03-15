@@ -37,8 +37,16 @@ public:
 	
 	bool IsAlive() const;
 
+	bool Kill(AActor* Instigator);
+
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool IsAtMaxHealth();
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	float GetHealthMax();
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	float GetHealth();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	float MaxHealth;

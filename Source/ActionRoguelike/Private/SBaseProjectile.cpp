@@ -28,8 +28,6 @@ ASBaseProjectile::ASBaseProjectile()
 	MovementComponent->bRotationFollowsVelocity = true;
 	MovementComponent->bInitialVelocityInLocalSpace = true;
 
-	SphereComponent->IgnoreActorWhenMoving(GetInstigator(), true);
-
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
 	AudioComponent->SetupAttachment(RootComponent);
 
@@ -41,7 +39,7 @@ void ASBaseProjectile::PostInitializeComponents()
 	Super::PostInitializeComponents();
 	
 	SetLifeSpan(LifeSpan);
-	//SphereComponent->IgnoreActorWhenMoving(GetInstigator(), true);
+	SphereComponent->IgnoreActorWhenMoving(GetInstigator(), true);
 
 	if (AudioComponent)
 		AudioComponent->Play();

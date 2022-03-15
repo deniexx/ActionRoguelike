@@ -204,3 +204,9 @@ void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent*
 		DisableInput(PC);
 	}
 }
+
+// Exec functions
+void ASCharacter::HealSelf(float Amount /* = 100 */)
+{
+	AttributeComponent->ApplyHealthChange(this, Amount);
+}

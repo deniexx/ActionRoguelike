@@ -44,4 +44,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	float SpawnTimerInterval;
+
+
+	// Exec funstions
+	UFUNCTION(Exec)
+	void KillAll();
 };
