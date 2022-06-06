@@ -3,7 +3,7 @@
 
 #include "SMagicProjectile.h"
 
-#include "SAttributeComponent.h"
+#include "SGameplayFunctionLibrary.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -40,15 +40,8 @@ void ASMagicProjectile::ApplyDamageAndDestroyActor(AActor* OtherActor, const FHi
 {
 	if (OtherActor && OtherActor != GetInstigator())
 	{
-		USAttributeComponent* AttributeComponent = USAttributeComponent::GetAttributes(OtherActor);
-		if (AttributeComponent)
-		{
-			AttributeComponent->ApplyHealthChange(GetInstigator(), -Damage);
-		}
-
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyParticle, Hit.ImpactPoint);
-		UGameplayStatics::PlayWorldCameraShake(GetWorld(), CameraShakeBase, Hit.ImpactPoint, 00.0f, 800.0f, 0.0f);
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplosionSound, Hit.ImpactPoint);
-		Destroy();
+		USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, Damage, Hit);
+		
+		Explode(Hit.ImpactPoint);
 	}
 }

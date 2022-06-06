@@ -6,6 +6,7 @@
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 
 
@@ -44,3 +45,12 @@ void ASBaseProjectile::PostInitializeComponents()
 	if (AudioComponent)
 		AudioComponent->Play();
 }
+
+void ASBaseProjectile::Explode(FVector Location)
+{
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyParticle, Location);
+	UGameplayStatics::PlayWorldCameraShake(GetWorld(), CameraShakeBase, Location, 00.0f, 800.0f, 0.0f);
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplosionSound, Location);
+	Destroy();
+}
+

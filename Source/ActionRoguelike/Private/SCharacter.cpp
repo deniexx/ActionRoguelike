@@ -3,7 +3,7 @@
 
 #include "SCharacter.h"
 
-#include "DrawDebugHelpers.h"
+#include "SActionComponent.h"
 #include "SAttributeComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/SInteractionComponent.h"
@@ -27,6 +27,8 @@ ASCharacter::ASCharacter()
 	InteractionComponent = CreateDefaultSubobject<USInteractionComponent>(TEXT("InteractionComponent"));
 
 	AttributeComponent = CreateDefaultSubobject<USAttributeComponent>(TEXT("AttributeComponent"));
+
+	ActionComponent = CreateDefaultSubobject<USActionComponent>(TEXT("ActionComponent"));
 
 	bUseControllerRotationYaw = false;
 	
@@ -70,10 +72,18 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttack);
 	PlayerInputComponent->BindAction("SecondaryAttack", IE_Pressed, this, &ASCharacter::SecondaryAttack);
+
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ASCharacter::SprintStart);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ASCharacter::SprintStop);
 	
 	PlayerInputComponent->BindAction("PrimaryUtility", IE_Pressed, this, &ASCharacter::PrimaryUtility);
 	
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &ASCharacter::PrimaryInteract);
+}
+
+FVector ASCharacter::GetPawnViewLocation() const
+{
+	return CameraComp->GetComponentLocation();
 }
 
 // Input Functions
@@ -97,93 +107,30 @@ void ASCharacter::MoveRight(float Value)
 	AddMovementInput(RightVector, Value);
 }
 
+void ASCharacter::SprintStart()
+{
+	ActionComponent->StartActionByName(this, "Sprint");
+}
+
+void ASCharacter::SprintStop()
+{
+	ActionComponent->StopActionByName(this, "Sprint");
+}
+
 // Primary attack
 void ASCharacter::PrimaryAttack()
 {
-	PlayAnimMontage(AttackAnim);
-	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, GetMesh(), TEXT("Muzzle_01"));
-	
-	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimeElapsed, 0.2f);
-}
-
-void ASCharacter::PrimaryAttack_TimeElapsed()
-{
-	// Shooting a raycast to determine the rotation of the projectile
-	const FVector Start = CameraComp->GetComponentLocation();
-	FVector EyeLocation;
-	FRotator EyeRotation;
-	GetActorEyesViewPoint(EyeLocation, EyeRotation);
-	FVector End = Start + (EyeRotation.Vector() * 100000);
-	
-	FHitResult Hit;
-	FCollisionQueryParams CollisionQueryParams;
-	CollisionQueryParams.AddIgnoredActor(this);
-	GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Camera, CollisionQueryParams);
-
-	const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-	FRotator SpawnTMRotator;
-	
-	AActor* HitActor = Hit.GetActor();
-	if (HitActor)
-		SpawnTMRotator = (Hit.ImpactPoint - HandLocation).Rotation();
-	else
-		SpawnTMRotator = (End - HandLocation).Rotation();
-
-	// Spawning the projectile
-	const FTransform SpawnTM = FTransform(SpawnTMRotator, HandLocation);
-	
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnParams.Instigator = this;
-	
-	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+	ActionComponent->StartActionByName(this, "PrimaryAttack");
 }
 
 void ASCharacter::SecondaryAttack()
 {
-	PlayAnimMontage(AttackAnim);
-	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, GetMesh(), TEXT("Muzzle_01"));
-	
-	GetWorldTimerManager().SetTimer(TimerHandle_SecondaryAttack, this, &ASCharacter::SecondaryAttack_TimeElapsed, 0.2f);
-}
-
-void ASCharacter::SecondaryAttack_TimeElapsed()
-{
-	FVector EyeLocation;
-	FRotator EyeRotation;
-	GetActorEyesViewPoint(EyeLocation, EyeRotation);
-
-	const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-	const FTransform SpawnTM = FTransform(EyeRotation, HandLocation);
-	
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnParams.Instigator = this;
-	
-	GetWorld()->SpawnActor<AActor>(SecondaryProjectileClass, SpawnTM, SpawnParams);
+	ActionComponent->StartActionByName(this, "SecondaryAttack");
 }
 
 void ASCharacter::PrimaryUtility()
 {
-	PlayAnimMontage(AttackAnim);
-
-	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryUtility, this, &ASCharacter::PrimaryUtility_TimeElapsed, 0.2f);
-}
-
-void ASCharacter::PrimaryUtility_TimeElapsed()
-{
-	FVector EyeLocation;
-	FRotator EyeRotation;
-	GetActorEyesViewPoint(EyeLocation, EyeRotation);
-
-	const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-	const FTransform SpawnTM = FTransform(EyeRotation, HandLocation);
-	
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnParams.Instigator = this;
-	
-	GetWorld()->SpawnActor<AActor>(PrimaryUtilityClass, SpawnTM, SpawnParams);
+	ActionComponent->StartActionByName(this, "PrimaryUtility");
 }
 
 // Interaction using the interaction component

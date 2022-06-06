@@ -6,6 +6,8 @@
 #include "DrawDebugHelpers.h"
 #include "SGameplayInterface.h"
 
+static TAutoConsoleVariable<bool> CVarDebugDrawInteraction(TEXT("sc.DebugDrawInteraction"), false, TEXT("Draw debug sphere for line interaction."), ECVF_Cheat);
+
 // Sets default values for this component's properties
 USInteractionComponent::USInteractionComponent()
 {
@@ -36,6 +38,8 @@ void USInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 void USInteractionComponent::PrimaryInteract()
 {
+	bool bDebugDraw = CVarDebugDrawInteraction.GetValueOnGameThread();
+	
 	FCollisionObjectQueryParams ObjectQueryParams;
 	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
 
@@ -47,36 +51,25 @@ void USInteractionComponent::PrimaryInteract()
 
 	const FVector End = EyeLocation + (EyeRotation.Vector() * 1000);
 	
-	/*
-	FHitResult Hit;
-	
-	bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, EyeLocation, End, ObjectQueryParams);
-
-	AActor* HitActor = Hit.GetActor();
-	if (HitActor)
-	{
-		if (HitActor->Implements<USGameplayInterface>())
-		{
-			APawn* MyPawn = Cast<APawn>(MyOwner);
-			ISGameplayInterface::Execute_Interact(HitActor, MyPawn);
-		}
-	}
-
-	FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
-	DrawDebugLine(GetWorld(), EyeLocation, End, FColor::Red, false, 2.0f, 0, 2.0f);
-	*/
-
 	TArray<FHitResult> Hits;
 	FCollisionShape Shape;
-	Shape.SetSphere(30.0f);
+	float Radius = 30.0f;
+	Shape.SetSphere(Radius);
 
-	GetWorld()->SweepMultiByObjectType(Hits, EyeLocation, End, FQuat::Identity, ObjectQueryParams, Shape);
+	bool bBlockingHit = GetWorld()->SweepMultiByObjectType(Hits, EyeLocation, End, FQuat::Identity, ObjectQueryParams, Shape);
+
+	FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
 	
 	for (FHitResult Hit: Hits)
 	{
 		AActor* HitActor = Hit.GetActor();
 		if (HitActor)
 		{
+			if (bDebugDraw)
+			{
+				DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, LineColor, false, 2.0f, 0, 2.0f);
+			}
+			
 			if (HitActor->Implements<USGameplayInterface>())
 			{
 				APawn* MyPawn = Cast<APawn>(MyOwner);
@@ -85,6 +78,11 @@ void USInteractionComponent::PrimaryInteract()
 				break;
 			}
 		}
+	}
+
+	if (bDebugDraw)
+	{
+		DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0.0f, 2.0f);
 	}
 }
 

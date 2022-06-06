@@ -33,9 +33,23 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Sounds")
 	class UAudioComponent* AudioComponent;
 
+	UPROPERTY(EditAnywhere, Category = "Particles")
+	UParticleSystem* DestroyParticle;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Stats")
+	float Damage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "VFX")
+	TSubclassOf<UCameraShakeBase> CameraShakeBase;
+	
+
 	
 
 public:
 	virtual void PostInitializeComponents() override;
+
+
+protected:
+	void Explode(FVector Location);
 
 };

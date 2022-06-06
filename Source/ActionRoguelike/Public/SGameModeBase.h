@@ -23,6 +23,8 @@ public:
 	
 	virtual void StartPlay() override;
 
+	virtual void OnActorKilled(AActor* VictimActor, AActor* Killer);
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
@@ -44,6 +46,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	float SpawnTimerInterval;
+
+	UFUNCTION()
+	void RespawnPlayerElapsed(AController* Controller);
 
 
 	// Exec funstions

@@ -10,6 +10,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class USInteractionComponent;
 class USAttributeComponent;
+class USActionComponent;
 class UAnimMontage;
 
 UCLASS()
@@ -28,32 +29,16 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	USpringArmComponent* SpringArmComp;
-
-	UPROPERTY(EditAnywhere, Category = "Attacks")
-	TSubclassOf<AActor> ProjectileClass;
-
-	UPROPERTY(EditAnywhere, Category = "Attacks")
-	TSubclassOf<AActor> SecondaryProjectileClass;
-
-	UPROPERTY(EditAnywhere, Category = "Utility")
-	TSubclassOf<AActor> PrimaryUtilityClass;
-
+	
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USInteractionComponent* InteractionComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USAttributeComponent* AttributeComponent;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Attacks")
-	UAnimMontage* AttackAnim;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Attack")
-	UParticleSystem* MuzzleFlash;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USActionComponent* ActionComponent;
 	
-	FTimerHandle TimerHandle_PrimaryAttack;
-	FTimerHandle TimerHandle_SecondaryAttack;
-	FTimerHandle TimerHandle_PrimaryUtility;
-
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -64,23 +49,20 @@ protected:
 	void MoveRight(float Value);
 
 	UFUNCTION()
-	void PrimaryAttack();
+	void SprintStart();
 
 	UFUNCTION()
-	void PrimaryAttack_TimeElapsed();
+	void SprintStop();
 
+	UFUNCTION()
+	void PrimaryAttack();
+	
 	UFUNCTION()
 	void SecondaryAttack();
-
-	UFUNCTION()
-	void SecondaryAttack_TimeElapsed();
-
+	
 	UFUNCTION()
 	void PrimaryUtility();
-
-	UFUNCTION()
-	void PrimaryUtility_TimeElapsed();
-
+	
 	UFUNCTION()
 	void PrimaryInteract();
 
@@ -96,6 +78,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual FVector GetPawnViewLocation() const override;
 
 	// Exec functions
 	UFUNCTION(Exec)
