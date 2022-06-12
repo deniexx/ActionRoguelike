@@ -33,6 +33,8 @@ ASBaseProjectile::ASBaseProjectile()
 	AudioComponent->SetupAttachment(RootComponent);
 
 	LifeSpan = 5.0f;
+
+	//SetReplicates(true);
 }
 
 void ASBaseProjectile::PostInitializeComponents()
@@ -46,11 +48,11 @@ void ASBaseProjectile::PostInitializeComponents()
 		AudioComponent->Play();
 }
 
-void ASBaseProjectile::Explode(FVector Location)
+void ASBaseProjectile::Explode()
 {
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyParticle, Location);
-	UGameplayStatics::PlayWorldCameraShake(GetWorld(), CameraShakeBase, Location, 00.0f, 800.0f, 0.0f);
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplosionSound, Location);
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyParticle, GetActorLocation());
+	UGameplayStatics::PlayWorldCameraShake(GetWorld(), CameraShakeBase, GetActorLocation(), 00.0f, 800.0f, 0.0f);
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplosionSound, GetActorLocation());
 	Destroy();
 }
 

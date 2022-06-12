@@ -4,50 +4,31 @@
 #include "SHealthPotion.h"
 
 #include "SAttributeComponent.h"
+#include "SPlayerState.h"
 
 // Sets default values
 ASHealthPotion::ASHealthPotion()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	
-	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
-	RootComponent = BaseMesh;
 
-	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
-	SphereComponent->SetupAttachment(RootComponent);
-
-	HealAmount = 50.0f;
-	TimerDuration = 20.0f;
 }
 
 void ASHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 {
-	if (InstigatorPawn)
+	if (!ensure(InstigatorPawn))
 	{
-		USAttributeComponent* AttributeComponent = Cast<USAttributeComponent>(InstigatorPawn->GetComponentByClass(USAttributeComponent::StaticClass()));
-		if (AttributeComponent && !AttributeComponent->IsAtMaxHealth())
+		return;
+	}
+
+	USAttributeComponent* AttributeComp = USAttributeComponent::GetAttributes(InstigatorPawn);
+
+	if (ensure(AttributeComp) && !AttributeComp->IsAtMaxHealth())
+	{
+		if (ASPlayerState* PS = InstigatorPawn->GetPlayerState<ASPlayerState>())
 		{
-			AttributeComponent->ApplyHealthChange(this, HealAmount);
-			DisableAllActions();
-			FTimerHandle EnableActorActions;
-			GetWorldTimerManager().SetTimer(EnableActorActions, this, &ASHealthPotion::EnableActorActions_TimerElapsed, TimerDuration);
+			if (PS->RemoveCredits(CreditCost) && AttributeComp->ApplyHealthChange(this, AttributeComp->GetHealthMax()))
+			{
+				HideAndCooldownPowerUp();
+			}
 		}
 	}
 }
-
-void ASHealthPotion::DisableAllActions()
-{
-	SetActorEnableCollision(false);
-	BaseMesh->SetVisibility(false);
-}
-
-void ASHealthPotion::EnableActorActions_TimerElapsed()
-{
-	SetActorEnableCollision(true);
-	BaseMesh->SetVisibility(true);
-}
-
-
-
-
-

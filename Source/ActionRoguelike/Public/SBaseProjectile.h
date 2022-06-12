@@ -50,6 +50,6 @@ public:
 
 
 protected:
-	void Explode(FVector Location);
+	void Explode();
 
 };

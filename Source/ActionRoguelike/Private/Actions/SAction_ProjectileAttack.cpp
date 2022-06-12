@@ -23,11 +23,14 @@ void USAction_ProjectileAttack::StartAction_Implementation(AActor* Instigator)
 		
 		UGameplayStatics::SpawnEmitterAttached(CastingEffect, Character->GetMesh(), TEXT("Muzzle_01"));
 
-		FTimerHandle TimerHandle_AttackDelay;
-		FTimerDelegate Delegate;
-		Delegate.BindUFunction(this, "AttackDelay_TimerElapsed", Character);
+		if (Character->HasAuthority())
+		{
+			FTimerHandle TimerHandle_AttackDelay;
+			FTimerDelegate Delegate;
+			Delegate.BindUFunction(this, "AttackDelay_TimerElapsed", Character);
 		
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle_AttackDelay, Delegate, AttackAnimDelay, false);
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle_AttackDelay, Delegate, AttackAnimDelay, false);
+		}
 	}
 }
 

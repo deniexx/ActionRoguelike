@@ -50,6 +50,9 @@ protected:
 	UFUNCTION()
 	void RespawnPlayerElapsed(AController* Controller);
 
+	UPROPERTY(EditDefaultsOnly, Category = "Credits")
+	int32 CreditsPerKill;
+
 
 	// Exec funstions
 	UFUNCTION(Exec)

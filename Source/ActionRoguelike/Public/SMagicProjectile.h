@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "SBaseProjectile.h"
 #include "SMagicProjectile.generated.h"
 
@@ -14,13 +15,16 @@ class ACTIONROGUELIKE_API ASMagicProjectile : public ASBaseProjectile
 public:	
 	// Sets default values for this actor's properties
 	ASMagicProjectile();
+
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	TSubclassOf<class USActionEffect> ActionEffect;
 	
-	virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
-
-	//virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
-
-	//UFUNCTION()
-	//void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
-
-	void ApplyDamageAndDestroyActor(AActor* OtherActor, const FHitResult& Hit);
+	UPROPERTY(EditDefaultsOnly, Category = "Tags")
+	FGameplayTag ParryTag;
+	
+	UFUNCTION()
+	void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	
 };

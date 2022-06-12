@@ -19,8 +19,29 @@ public:
 	void PrimaryInteract();
 
 protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
+
+	UFUNCTION(Server, Reliable)
+	void ServerInteract(AActor* InFocus);
+	
+	void FindBestInteractable();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
+	float TraceDistance;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
+	float TraceRadius;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
+	TEnumAsByte<ECollisionChannel> TraceCollisionChannel;
+
+	UPROPERTY()
+	AActor* FocusedActor;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<class USWorldUserWidget> DefaultWidgetClass;
+	
+	UPROPERTY()
+	USWorldUserWidget* DefaultWidgetInstance;
 
 public:	
 	// Called every frame
