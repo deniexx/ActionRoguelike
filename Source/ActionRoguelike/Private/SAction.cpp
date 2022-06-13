@@ -4,7 +4,6 @@
 #include "SAction.h"
 #include "SActionComponent.h"
 #include "Net/UnrealNetwork.h"
-#include "ActionRoguelike/ActionRoguelike.h"
 
 void USAction::Initialize(USActionComponent* NewActionComponent)
 {
@@ -18,6 +17,11 @@ void USAction::StartAction_Implementation(AActor* Instigator)
 
 	RepData.bIsRunning = true;
 	RepData.Instigator = Instigator;
+
+	GetOwningComponent()->OnActionStarted.Broadcast(GetOwningComponent(), this);
+
+	if (GetOwningComponent()->GetOwnerRole() == ROLE_Authority)
+		TimeStarted = GetWorld()->TimeSeconds;
 	
 	UE_LOG(LogTemp, Log, TEXT("Running %s"), *GetNameSafe(this));
 	//LogOnScreen(this, FString::Printf(TEXT("Started: %s"), *ActionName.ToString()), FColor::Green);
@@ -30,6 +34,8 @@ void USAction::StopAction_Implementation(AActor* Instigator)
 
 	RepData.bIsRunning = false;
 	RepData.Instigator = Instigator;
+
+	GetOwningComponent()->OnActionStopped.Broadcast(GetOwningComponent(), this);
 	
 	UE_LOG(LogTemp, Log, TEXT("Stopping %s"), *GetNameSafe(this));
 	//LogOnScreen(this, FString::Printf(TEXT("Started: %s"), *ActionName.ToString()), FColor::White);
@@ -88,4 +94,5 @@ void USAction::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetime
 
 	DOREPLIFETIME(USAction, RepData);
 	DOREPLIFETIME(USAction, ActionComponent);
+	DOREPLIFETIME(USAction, TimeStarted);
 }

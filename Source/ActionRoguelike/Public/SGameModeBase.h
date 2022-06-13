@@ -7,6 +7,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "SGameModeBase.generated.h"
 
+class USSaveGame;
 class UEnvQueryInstanceBlueprintWrapper;
 
 /**
@@ -25,8 +26,18 @@ public:
 
 	virtual void OnActorKilled(AActor* VictimActor, AActor* Killer);
 
+	UFUNCTION(BlueprintCallable, Category = "SaveGame")
+	void WriteSaveGame();
+
+	void LoadSaveGame();
+
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+
+	virtual void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) override;
+
 protected:
 
+	
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	UEnvQuery* SpawnBotQuery;
 	
@@ -53,6 +64,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Credits")
 	int32 CreditsPerKill;
 
+	UPROPERTY()
+	USSaveGame* CurrentSaveGame;
+
+	FString SlotName;
 
 	// Exec funstions
 	UFUNCTION(Exec)

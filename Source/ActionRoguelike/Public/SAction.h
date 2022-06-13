@@ -75,6 +75,12 @@ protected:
 	FActionRepData RepData;
 	//bool bIsRunning;
 
+	UPROPERTY(Replicated)
+	float TimeStarted;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	UTexture2D* Icon;
+
 	UFUNCTION()
 	void OnRep_RepData();
 

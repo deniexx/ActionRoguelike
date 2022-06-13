@@ -21,9 +21,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Rotation")
 	float TargetPitch;
 
+	virtual void OnActorLoaded_Implementation() override;
+
 protected:
 
-	UPROPERTY(ReplicatedUsing="OnRep_LidOpened", BlueprintReadOnly)
+	UPROPERTY(ReplicatedUsing="OnRep_LidOpened", BlueprintReadOnly, SaveGame)
 	bool bLidOpened;
 
 	UFUNCTION()

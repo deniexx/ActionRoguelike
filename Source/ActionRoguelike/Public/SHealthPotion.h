@@ -21,4 +21,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "PowerUps")
 	int32 CreditCost;
+
+	virtual FText GetInteractText_Implementation(APawn* InstigatorPawn) override;
 };

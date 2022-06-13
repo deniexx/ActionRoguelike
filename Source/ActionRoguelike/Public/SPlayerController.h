@@ -22,4 +22,21 @@ protected:
 	FOnPawnChanged OnPawnChanged;
 
 	virtual void SetPawn(APawn* InPawn) override;
+
+	virtual void BeginPlayingState() override;
+
+	UFUNCTION(BlueprintNativeEvent)
+	void BP_BeginPlayingState();
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> PauseMenuClass;
+
+	UPROPERTY()
+	UUserWidget* PauseMenuInstance;
+
+	UFUNCTION(BlueprintCallable)
+	void TogglePauseMenu();
+
+	UFUNCTION()
+	virtual void SetupInputComponent() override;
 };

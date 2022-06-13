@@ -23,12 +23,20 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class USphereComponent* SphereComponent;
 
+	UPROPERTY(ReplicatedUsing="OnRep_IsActive")
+	bool bIsActive;
+
+	UFUNCTION()
+	void OnRep_IsActive();
+
 	UFUNCTION(BlueprintCallable, Category = "PowerUps")
 	void HideAndCooldownPowerUp();
 	
 	void DisableAllActions();
 
 	void EnableActorActions_TimerElapsed();
+
+	virtual FText GetInteractText_Implementation(APawn* InstigatorPawn) override;
 
 	UPROPERTY(EditAnywhere, Category = "Stats")
 	float TimerDuration;

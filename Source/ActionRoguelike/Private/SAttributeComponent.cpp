@@ -55,7 +55,8 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 			}
 		}
 	}
-	
+
+	UE_LOG(LogTemp, Warning, TEXT("Actual Delta: %f"), ActualDelta);
 	return ActualDelta != 0;
 }
 

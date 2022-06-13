@@ -14,7 +14,7 @@ ASItemChest::ASItemChest()
 
 	LidMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LidMesh"));
 	LidMesh->SetupAttachment(BaseMesh);
-
+	
 	TargetPitch = 110.0f;
 
 	SetReplicates(true);
@@ -23,6 +23,11 @@ ASItemChest::ASItemChest()
 void ASItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
 	bLidOpened = !bLidOpened;
+	OnRep_LidOpened();
+}
+
+void ASItemChest::OnActorLoaded_Implementation()
+{
 	OnRep_LidOpened();
 }
 
