@@ -3,12 +3,42 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/DataTable.h"
 #include "EnvironmentQuery/EnvQueryTypes.h"
 #include "GameFramework/GameModeBase.h"
 #include "SGameModeBase.generated.h"
 
 class USSaveGame;
 class UEnvQueryInstanceBlueprintWrapper;
+class UDataTable;
+class USMonsterData;
+
+USTRUCT(BlueprintType)
+struct FMonsterInfoRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+
+	FMonsterInfoRow()
+	{
+		Weight = 1.0f;
+		SpawnCost = 5.0f;
+		KillReward = 150.0f;
+	}
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FPrimaryAssetId MonsterID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float Weight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float SpawnCost;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float KillReward;
+};
 
 /**
  * 
@@ -44,6 +74,9 @@ protected:
 	FTimerHandle TimerHandle_SpawnBots;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	UDataTable* MonsterTable;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	UCurveFloat* DifficultyCurve;
 	
 	UFUNCTION()
@@ -52,8 +85,11 @@ protected:
 	UFUNCTION()
 	void OnQueryFinished(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
 
-	UPROPERTY(EditDefaultsOnly, Category = "AI")
-	TSubclassOf<AActor> MinionClass;
+	UFUNCTION()
+	void OnMonsterLoaded(FPrimaryAssetId LoadedID, FVector SpawnLocation);
+
+	// UPROPERTY(EditDefaultsOnly, Category = "AI")
+	// TSubclassOf<AActor> MinionClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	float SpawnTimerInterval;

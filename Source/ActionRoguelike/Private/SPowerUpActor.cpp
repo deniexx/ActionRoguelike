@@ -18,7 +18,7 @@ ASPowerUpActor::ASPowerUpActor()
 	HealAmount = 50.0f;
 	TimerDuration = 20.0f;
 
-	SetReplicates(true);
+	bReplicates = true;
 }
 
 void ASPowerUpActor::OnRep_IsActive()

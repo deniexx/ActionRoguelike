@@ -27,10 +27,13 @@ void ASHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 	{
 		if (ASPlayerState* PS = InstigatorPawn->GetPlayerState<ASPlayerState>())
 		{
-			if (PS->RemoveCredits(CreditCost) && AttributeComp->ApplyHealthChange(this, AttributeComp->GetHealthMax()))
+			if (PS->RemoveCredits(CreditCost))
 			{
-				HideAndCooldownPowerUp();
+				if (AttributeComp->ApplyHealthChange(this, AttributeComp->GetHealthMax()))
+					HideAndCooldownPowerUp();
+				else UE_LOG(LogTemp, Warning, TEXT("Could not apply health change"));
 			}
+			else UE_LOG(LogTemp, Warning, TEXT("Could not remove credits"));
 		}
 	}
 }

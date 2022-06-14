@@ -20,8 +20,7 @@ ASAICharacter::ASAICharacter()
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComponent"));
 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Ignore);
+	
 	GetMesh()->SetGenerateOverlapEvents(true);
 	
 	AttributeComponent = CreateDefaultSubobject<USAttributeComponent>(TEXT("AttributeComponent"));

@@ -34,7 +34,7 @@ ASBaseProjectile::ASBaseProjectile()
 
 	LifeSpan = 5.0f;
 
-	//SetReplicates(true);
+	bReplicates = true;
 }
 
 void ASBaseProjectile::PostInitializeComponents()
